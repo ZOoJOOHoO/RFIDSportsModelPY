@@ -18,6 +18,6 @@ def clear_txt_files_in_folder(folder_path):
             os.remove(file_path)
 
 
-root_dir = r'D:\py_project\RfidSport\model\dataSets'
+root_dir = r'D:\py_project\RfidSport\model\dataSetsFINAL'
 clear_txt_files(root_dir)
 print("所有txt文件已删除")

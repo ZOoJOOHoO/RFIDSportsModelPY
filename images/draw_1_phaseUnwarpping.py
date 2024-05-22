@@ -46,7 +46,7 @@ showDataList.append(phases[4])
 B= phases_raw[4]
 showDataList.append(B)
 for i in range(0, len(phases_raw)):
-    phases_raw[i]=reduceNoise.wavelet_denoise2(phases_raw[i])
+    phases_raw[i]= reduceNoise.wavelet_denoise(phases_raw[i])
 showDataList.append(phases_raw[4])
 
 showData(1, 3, -0.5, 6.5, showDataList)

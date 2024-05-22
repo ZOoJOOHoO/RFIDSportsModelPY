@@ -68,13 +68,13 @@ def showFeatureIndex1(row, column, miny, maxy, indexs, datas):
     #plt.savefig("特征提取.svg", format='svg')
     plt.show()
 
-phases, rssis = singleTxtRead.getData(r'D:\JAVAPROJECT\rfidSport\newData\positionA\深蹲\A\5.txt')
-
+# phases, rssis = singleTxtRead.getData(r'D:\JAVAPROJECT\rfidSport\newData\positionA\深蹲\A\5.txt')
+phases, rssis = singleTxtRead.getData(r'D:\JAVAPROJECT\rfidSport\newData\positionA\深蹲\A\40.txt')
 phases_raw = copy.deepcopy(phases)
 for i in range(0, len(phases_raw)):
     tool.phaseJump(phases_raw[i])
     tool.phaseUnwrapping(phases_raw[i])
-    phases_raw[i]=reduceNoise.wavelet_denoise2(phases_raw[i])
+    phases_raw[i]= reduceNoise.wavelet_denoise(phases_raw[i])
 index = []
 for i in range(0, len(phases_raw)):
     start, end = tool.featureExtraction(phases_raw[i])
