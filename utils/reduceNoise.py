@@ -5,18 +5,14 @@
 import pywt
 import numpy as np
 
-def wavelet_denoise(signal, wavelet='db4', level=2):
-    # 将信号进行小波分解
-    coeffs = pywt.wavedec(signal, wavelet, level=level)
-    # 对每个分解系数进行软阈值处理
-    threshold = np.std(coeffs[-level]) * np.sqrt(2 * np.log(len(signal)))
-    new_coeffs = [pywt.threshold(detail, threshold, mode='soft') for detail in coeffs[1:]]
-    # 重构去噪后的信号
-    denoised_signal = pywt.waverec([coeffs[0]] + new_coeffs, wavelet)
-    return denoised_signal
+import numpy as np
+import pywt
 
+def wavelet_denoise(signal, wavelet='db4', level=3, threshold_type='soft'):
+    # 如果信号长度为奇数，进行截断使其长度变为偶数
+    if len(signal) % 2 == 1:
+        signal = signal[:-1]
 
-def wavelet_denoise2(signal, wavelet='db4', level=3, threshold_type='soft'):
     coeffs = pywt.wavedec(signal, wavelet, level=level)
 
     # 计算每个分解系数的阈值

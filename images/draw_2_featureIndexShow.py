@@ -74,7 +74,7 @@ phases_raw = copy.deepcopy(phases)
 for i in range(0, len(phases_raw)):
     tool.phaseJump(phases_raw[i])
     tool.phaseUnwrapping(phases_raw[i])
-    phases_raw[i]=reduceNoise.wavelet_denoise2(phases_raw[i])
+    phases_raw[i]= reduceNoise.wavelet_denoise(phases_raw[i])
 index = []
 for i in range(0, len(phases_raw)):
     start, end = tool.featureExtraction(phases_raw[i])

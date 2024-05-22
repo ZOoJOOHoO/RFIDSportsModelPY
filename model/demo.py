@@ -12,37 +12,21 @@ from sklearn.metrics import confusion_matrix, classification_report
 import utils.utils as tool
 import C_dataForTrainMaker
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.regularizers import l2
+import model.C_dataForTrainMaker as loadData
 
-dataset_with_labels = C_dataForTrainMaker.getDatasetWithLabels("D:\py_project\RfidSport\model\dataSets", isInvert=1)
 
-X = [data for data, label in dataset_with_labels]
-y = [label for data, label in dataset_with_labels]
-
-np.random.seed(88)
-tf.random.set_seed(88)
-indices = np.random.permutation(len(X))
-X = [X[i] for i in indices]
-y = [y[i] for i in indices]
-
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=1)
-
-X_train = np.array(X_train)
-X_test = np.array(X_test)
-
-label_encoder = LabelEncoder()
-y_train_encoded = label_encoder.fit_transform(y_train)
-y_test_encoded = label_encoder.transform(y_test)
+X_train, X_test, Y_train, Y_test = loadData.getXandY("D:\py_project\RfidSport\model\dataSets", isInvert=0)
 
 model = tf.keras.Sequential([
     tf.keras.layers.Reshape((90, 16), input_shape=(16, 90)),
-    tf.keras.layers.Conv1D(32, 3, activation='relu', padding='same'),
     tf.keras.layers.Conv1D(32, 3, activation='relu', padding='same'),
     tf.keras.layers.Conv1D(64, 3, activation='relu', padding='same'),
     tf.keras.layers.Conv1D(128, 3, activation='relu', padding='same'),
     tf.keras.layers.MaxPooling1D(2),
     tf.keras.layers.Flatten(),
-    tf.keras.layers.Dense(64, activation='relu'),
-    tf.keras.layers.Dense(64, activation='relu'),
+    tf.keras.layers.Dense(64, activation='relu',kernel_regularizer=l2(0.01)),
+    tf.keras.layers.Dense(64, activation='relu',kernel_regularizer=l2(0.01)),
 
     tf.keras.layers.Dense(8, activation='softmax')
 ])
@@ -55,10 +39,9 @@ model.compile(optimizer=optimizer,  # 使用自定义的 Adam 优化器
               metrics=['accuracy'])  # 评估指标
 
 # 训练模型
-model.fit(X_train, y_train_encoded, epochs=50, batch_size=64, validation_data=(X_test, y_test_encoded),
-          validation_freq=1)
+model.fit(X_train, Y_train, epochs=100, batch_size=64, validation_data=(X_test, Y_test))
 
-test_loss, test_accuracy = model.evaluate(X_test, y_test_encoded)
+test_loss, test_accuracy = model.evaluate(X_test, Y_test)
 
 print("Test Accuracy:", test_accuracy)
 
